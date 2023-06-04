@@ -22,6 +22,16 @@
     #include <hex/core/cfg/hex_api.hpp>
 #endif /// !HEX_CORE_CFG_API_HPP
 
+// Include hex::core::Application
+#ifndef HEX_CORE_APPLICATION_HPP
+    #include <hex/core/app/Application.hpp>
+#endif /// !HEX_CORE_APPLICATION_HPP
+
+// Include hex::core::IRendererListener
+#ifndef HEX_CORE_I_RENDERER_LISTENER_HXX
+    #include <hex/core/render/IRendererListener.hxx>
+#endif /// !HEX_CORE_I_RENDERER_LISTENER_HXX
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // TYPES
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -38,7 +48,7 @@ namespace tetrix
         // TetrixGame
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        HEX_API class TetrixGame final
+        HEX_API class TetrixGame final : public hexApp, public hexIRendererListener
         {
 
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -71,6 +81,27 @@ namespace tetrix
             TetrixGame& operator=(TetrixGame&&)      = delete;
 
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            // METHODS
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+            void stopGame() noexcept;
+
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+        protected:
+
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            // OVERRIDE.ISystem
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+            virtual bool onStart()  final;
+            virtual bool onResume() final;
+            virtual void onPause()  final;
+            virtual void onStop()   final;
+
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         public:
 
@@ -80,14 +111,24 @@ namespace tetrix
             // DESTRUCTOR
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-            ~TetrixGame() HEX_NOEXCEPT;
+            ~TetrixGame() noexcept;
 
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             // METHODS
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
             static void Initialize();
-            static void Terminate() HEX_NOEXCEPT;
+            static void Terminate() noexcept;
+
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            // OVERRIDE: IRendererListener.PUBLIC
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+            virtual bool onRenderReady() final;
+
+            virtual void onRender() final;
+
+            virtual void onRenderError(const std::exception err) final;
 
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
